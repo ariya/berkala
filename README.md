@@ -1,5 +1,11 @@
 # Berkala
 
+[![npm version](https://img.shields.io/npm/v/@ariya/berkala)](https://www.npmjs.com/package/@ariya/berkala)
+[![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/@ariya/berkala.svg)](https://bundlephobia.com/result?p=@ariya/berkala)
+[![GitHub license](https://img.shields.io/github/license/ariya/berkala)](https://github.com/ariya/berkala/blob/main/LICENSE)
+[![Tests](https://github.com/ariya/berkala/workflows/Tests/badge.svg)](https://github.com/ariya/berkala/actions)
+
+
 Berkala runs scheduled tasks specified in a YAML configuration.
 
 Requirement: [Node.js](https://nodejs.org/) v14 or later (with [npx](https://www.npmjs.com/package/npx)).
