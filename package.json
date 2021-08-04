@@ -1,5 +1,5 @@
 {
-  "name": "berkala",
+  "name": "@ariya/berkala",
   "version": "1.0.0",
   "description": "Run scheduled tasks",
   "main": "src/index.js",

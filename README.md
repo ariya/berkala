@@ -27,5 +27,5 @@ tasks:
 and then run:
 
 ```bash
-npx berkala
+npx @ariya/berkala
 ```
