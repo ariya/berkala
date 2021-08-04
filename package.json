@@ -4,11 +4,23 @@
   "description": "Run scheduled tasks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run check-format",
+    "check-format": "prettier --check \"**/*.js\"",
+    "format-code": "prettier --write \"**/*.js\""
   },
   "author": "Ariya Hidayat",
   "license": "MIT",
+  "files": [
+    "index.js"
+  ],
   "devDependencies": {
     "prettier": "~2.3.2"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 120,
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }
