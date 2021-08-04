@@ -2,7 +2,10 @@
   "name": "@ariya/berkala",
   "version": "1.0.0",
   "description": "Run scheduled tasks",
-  "main": "src/index.js",
+  "main": "index.js",
+  "bin": {
+    "berkala": "./index.js"
+  },
   "scripts": {
     "test": "npm run check-format",
     "check-format": "prettier --check \"**/*.js\"",
