@@ -22,25 +22,52 @@ function getConfig() {
 }
 
 /**
+ * A simple job to print a message via console.
+ */
+function printJob() {
+    const { workerData } = require('worker_threads');
+    const { job } = workerData;
+    const { message } = job;
+    console.log(message);
+}
+
+/**
+ * A job that dumps the worker data, useful for debugging.
+ */
+function debugJob() {
+    const { workerData } = require('worker_threads');
+    const { job } = workerData;
+
+    console.log('debug job=', JSON.stringify(job));
+}
+
+/**
  * Convert a task definition to a Bree job.
  */
 function convert(name, task) {
     const { type, interval } = task;
 
+    let path;
     let options = {};
 
-    let path = './jobs/print.js'; // safe fallback
     switch (type) {
         case 'debug':
-            path = './jobs/debug.js';
+            path = debugJob;
             options = task;
             break;
 
         case 'print':
-        default:
+            path = printJob;
             const { message } = task;
             options = { message };
             break;
+
+        default:
+            break;
+    }
+
+    if (!path) {
+        throw new Error('Unknown task type: ' + type);
     }
 
     return {
