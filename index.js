@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const yaml = require('js-yaml');
 const Bree = require('bree');
