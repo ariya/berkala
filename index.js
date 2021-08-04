@@ -32,6 +32,21 @@ function printJob() {
 }
 
 /**
+ * A job that sends desktop notification.
+ */
+function notifyJob() {
+    const notifier = require('node-notifier');
+    const { workerData } = require('worker_threads');
+    const { job } = workerData;
+    const { message } = job;
+    let { title } = job;
+    if (!title) {
+        title = 'Berkala';
+    }
+    notifier.notify({ title, message });
+}
+
+/**
  * A job that dumps the worker data, useful for debugging.
  */
 function debugJob() {
@@ -49,6 +64,7 @@ function convert(name, task) {
 
     let path;
     let options = {};
+    const { message = null } = task;
 
     switch (type) {
         case 'debug':
@@ -58,8 +74,13 @@ function convert(name, task) {
 
         case 'print':
             path = printJob;
-            const { message } = task;
             options = { message };
+            break;
+
+        case 'notify':
+            path = notifyJob;
+            const { title = null } = task;
+            options = { title, message };
             break;
 
         default:
