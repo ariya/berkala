@@ -14,7 +14,8 @@
     "index.js"
   ],
   "dependencies": {
-    "bree": "~6.2.1"
+    "bree": "~6.2.1",
+    "js-yaml": "~4.1.0"
   },
   "devDependencies": {
     "prettier": "~2.3.2"
