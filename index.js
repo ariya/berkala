@@ -62,6 +62,11 @@ function setupTasks(config) {
     return new Bree({ jobs });
 }
 
+// workaround an exception thrown by Bree
+if (!fs.existsSync('jobs')) {
+    fs.mkdirSync('jobs');
+}
+
 const config = getConfig();
 const tasks = setupTasks(config);
 tasks.start();
