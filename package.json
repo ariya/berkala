@@ -10,9 +10,19 @@
   },
   "author": "Ariya Hidayat",
   "license": "MIT",
-  "files": [
-    "index.js"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ariya/berkala.git"
+  },
+  "keywords": [
+    "scheduler",
+    "tasks",
+    "cron",
+    "cronjob"
   ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "bree": "~6.2.1",
     "js-yaml": "~4.1.0"
