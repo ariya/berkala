@@ -2,7 +2,7 @@
   "name": "berkala",
   "version": "1.0.0",
   "description": "Run scheduled tasks",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "npm run check-format",
     "check-format": "prettier --check \"**/*.js\"",
