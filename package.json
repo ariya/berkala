@@ -13,6 +13,9 @@
   "files": [
     "index.js"
   ],
+  "dependencies": {
+    "bree": "~6.2.1"
+  },
   "devDependencies": {
     "prettier": "~2.3.2"
   },
