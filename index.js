@@ -35,7 +35,8 @@ function printJob() {
  * A job that sends desktop notification.
  */
 function notifyJob() {
-    const notifier = require('node-notifier');
+    const os = require('os');
+    const child_process = require('child_process');
     const { workerData } = require('worker_threads');
     const { job } = workerData;
     const { message } = job;
@@ -43,7 +44,13 @@ function notifyJob() {
     if (!title) {
         title = 'Berkala';
     }
-    notifier.notify({ title, message });
+    if (os.type() === 'Linux') {
+        child_process.spawnSync('notify-send', [title, message]);
+    } else {
+        // TODO
+        // macOS: Notification Center via osascript
+        // Windows: PowerShell Notification API
+    }
 }
 
 /**
