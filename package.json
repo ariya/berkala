@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ariya Hidayat",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "~2.3.2"
+  }
 }
