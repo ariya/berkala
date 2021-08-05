@@ -6,32 +6,45 @@
 [![Tests](https://github.com/ariya/berkala/workflows/Tests/badge.svg)](https://github.com/ariya/berkala/actions)
 
 
-Berkala runs scheduled tasks specified in a YAML configuration.
+Berkala runs scheduled tasks specified in a YAML-based configuration.
 
 Requirement: [Node.js](https://nodejs.org/) v14 or later (with [npx](https://www.npmjs.com/package/npx)).
 
-To give it a try, first create `berkala.yml` with the following contents:
+To give it a try, simply run `npx @ariya/berkala`. Since a config file does not exist yet, you will be offered to create one.
+Simply accept it and `berkala.yml` will be created, which may look like the following:
 
 ```yml
 tasks:
 
+  # Without an explicit interval, the task runs immediately
   boot:
-    type: print
+    type: notify
     message: Berkala starts now
 
+  # We need to stay hydrated
   hourly-ping:
     type: print
     interval: every 1 hour
-    message: It's been another hour
+    message: Drink some water!
 
   lunch-reminder:
-    type: print
-    interval: at 11:59am
-    message: Lunch time!
+    type: notify
+    interval: at 11:58am
+    title: Important reminder
+    message: It's lunch time very soon
+
+  weekend-exercise:
+    type: notify
+    cron: 0 9 * * 6  # every 9 morning on Saturday
+    title: Stay healthy
+    message: Time for some exercises!
 ```
 
-and then run:
+The schedule for each task can be specified either with a human-friendly interval (e.g. `every 5 minutes`, `at 5pm`) or a cron expression (refer to [crontab guru](https://crontab.guru/) for more details). If neither is explicitly stated, then the task runs right away.
 
-```bash
-npx @ariya/berkala
-```
+As of now, only the following types of tasks are available:
+
+* `print`: displays a message to the standard output
+* `notify`: sends a desktop notification
+
+Just like any regular YAML, everything from the `#` character until the end of the line will be ignored. Use this to insert comments. 
