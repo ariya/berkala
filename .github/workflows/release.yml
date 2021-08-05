@@ -6,11 +6,22 @@ on:
       - 'v*'
 
 jobs:
-  release:
+
+  sanity:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm test
+
+  release:
+    needs: sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Create release
         uses: actions/create-release@v1
         env:
@@ -20,3 +31,17 @@ jobs:
           release_name: ${{ github.ref }}
           draft: false
           prerelease: false
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
