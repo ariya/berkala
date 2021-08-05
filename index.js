@@ -5,7 +5,6 @@ const fs = require('fs');
 const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
-const notify = require('native-notifier');
 
 const CONFIG_FILENAME = 'berkala.yml';
 
@@ -87,7 +86,8 @@ function printJob() {
  * A job that sends desktop notification.
  */
 function notifyJob() {
-    const notify = require('native-notifier');
+    const os = require('os');
+    const child_process = require('child_process');
     const { workerData } = require('worker_threads');
     const { job } = workerData;
     const { message } = job;
@@ -95,8 +95,12 @@ function notifyJob() {
     if (!title) {
         title = 'Berkala';
     }
-    const app = 'Berkala';
-    notify({ app, title, message });
+    if (os.type() === 'Linux') {
+        child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
+    } else {
+        // TODO macOS and Windows
+        console.log(title, message);
+    }
 }
 
 /**
