@@ -5,6 +5,7 @@ const fs = require('fs');
 const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
+const notify = require('native-notifier');
 
 const CONFIG_FILENAME = 'berkala.yml';
 
