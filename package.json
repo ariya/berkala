@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm run check-format",
     "check-format": "prettier --check \"**/*.js\"",
-    "format-code": "prettier --write \"**/*.js\""
+    "format-code": "prettier --write \"**/*.js\"",
+    "build": "pkg --compress brotli ."
   },
   "author": "Ariya Hidayat",
   "license": "MIT",
@@ -34,6 +35,9 @@
   "devDependencies": {
     "pkg": "~5.3.1",
     "prettier": "~2.3.2"
+  },
+  "pkg": {
+    "outputPath": "dist"
   },
   "prettier": {
     "tabWidth": 4,
