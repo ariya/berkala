@@ -1,8 +1,41 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+
+const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
+
+const CONFIG_FILENAME = 'berkala.yml';
+
+const SAMPLE_CONFIG = `
+tasks:
+
+  # Without an explicit interval, the task runs immediately
+  boot:
+    type: notify
+    message: Berkala starts now
+
+  # We need to stay hydrated
+  hourly-ping:
+    type: print
+    interval: every 1 hour
+    message: Drink some water!
+
+  lunch-reminder:
+    type: notify
+    interval: at 11:58am
+    title: Important reminder
+    message: It's lunch time very soon
+`;
+
+/**
+ * Returns true is interactivity is permitted (i.e. not in a CI)
+ */
+function isInteractive() {
+    const stdout = process.stdout;
+    return stdout.isTTY && !('CI' in process.env) && process.env.TERM !== 'dumb';
+}
 
 /**
  * Retrieve the configuration from the external berkala.yml file.
@@ -10,13 +43,25 @@ const Bree = require('bree');
 function getConfig() {
     const tasks = {};
     let config = { tasks };
-    try {
-        const contents = fs.readFileSync('berkala.yml', 'utf-8');
-        config = yaml.load(contents);
-    } catch (e) {
-        console.error('Can not load configuration file');
-        console.error(e.toString());
-        process.exit(-1);
+    if (!fs.existsSync(CONFIG_FILENAME) && isInteractive()) {
+        console.log(CONFIG_FILENAME, 'does not exist.');
+        const answer = readline.question('Do you want to create one (Y/n)? ').toUpperCase();
+        if (answer === 'Y' || answer === 'YES') {
+            fs.writeFileSync(CONFIG_FILENAME, SAMPLE_CONFIG.trim(), 'utf-8');
+            return yaml.load(SAMPLE_CONFIG);
+        } else {
+            console.error('Can not continue, configuration does not exist!');
+            process.exit(-1);
+        }
+    } else {
+        try {
+            const contents = fs.readFileSync(CONFIG_FILENAME, 'utf-8');
+            config = yaml.load(contents);
+        } catch (e) {
+            console.error('Can not load configuration file');
+            console.error(e.toString());
+            process.exit(-1);
+        }
     }
     return config;
 }
