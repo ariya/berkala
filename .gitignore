@@ -59,3 +59,12 @@ typings/
 
 # next.js build output
 .next
+
+# berkala output
+berkala.yml
+
+# build output
+dist
+
+# DS_Store
+.DS_Store
