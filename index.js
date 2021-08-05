@@ -27,6 +27,12 @@ tasks:
     interval: at 11:58am
     title: Important reminder
     message: It's lunch time very soon
+
+  weekend-exercise:
+    type: notify
+    cron: 0 9 * * 6  # every 9 morning on Saturday
+    title: Stay healthy
+    message: Time for some exercises!
 `;
 
 /**
@@ -106,7 +112,7 @@ function debugJob() {
  * Convert a task definition to a Bree job.
  */
 function convert(name, task) {
-    const { type, interval } = task;
+    const { type, interval, cron } = task;
 
     let path;
     let options = {};
@@ -141,6 +147,7 @@ function convert(name, task) {
         name,
         path,
         interval,
+        cron,
         ...options
     };
 }
