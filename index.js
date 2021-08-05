@@ -98,8 +98,11 @@ function notifyJob() {
     }
     if (os.type() === 'Linux') {
         child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
+    } else if (os.type() === 'Darwin') {
+        const command = `display notification "${message}" with title "${title}"`;
+        child_process.spawnSync('osascript', ['-e', command]);
     } else {
-        // TODO macOS and Windows
+        // TODO Windows
         console.log(title, message);
     }
 }
