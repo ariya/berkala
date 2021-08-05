@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "bree": "~6.2.1",
-    "js-yaml": "~4.1.0"
+    "js-yaml": "~4.1.0",
+    "native-notifier": "~0.1.6"
   },
   "devDependencies": {
     "prettier": "~2.3.2"
