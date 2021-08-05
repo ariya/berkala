@@ -1,16 +1,13 @@
 # Berkala
 
-[![npm version](https://img.shields.io/npm/v/@ariya/berkala)](https://www.npmjs.com/package/@ariya/berkala)
-[![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/@ariya/berkala.svg)](https://bundlephobia.com/result?p=@ariya/berkala)
 [![GitHub license](https://img.shields.io/github/license/ariya/berkala)](https://github.com/ariya/berkala/blob/main/LICENSE)
 [![Tests](https://github.com/ariya/berkala/workflows/Tests/badge.svg)](https://github.com/ariya/berkala/actions)
 
-
 Berkala runs scheduled tasks specified in a YAML-based configuration.
 
-Requirement: [Node.js](https://nodejs.org/) v14 or later (with [npx](https://www.npmjs.com/package/npx)).
+To get started, first download the binary for your operating system from the [Releases page](https://github.com/ariya/berkala/releases). Unpack the ZIP file and run the executable.
 
-To give it a try, simply run `npx @ariya/berkala`. Since a config file does not exist yet, you will be offered to create one.
+Since a config file does not exist yet, you will be offered to create one.
 Simply accept it and `berkala.yml` will be created, which may look like the following:
 
 ```yml
@@ -47,4 +44,24 @@ As of now, only the following types of tasks are available:
 * `print`: displays a message to the standard output
 * `notify`: sends a desktop notification (_only_ Linux for now)
 
-Just like any regular YAML, everything from the `#` character until the end of the line will be ignored. Use this to insert comments. 
+Just like any regular YAML, everything from the `#` character until the end of the line will be ignored. Use this to insert comments.
+
+<details>
+<summary>Alternative way to run Berkala (with Node.js)</summary>
+
+With [Node.js](https://nodejs.org/) v14 or later (that has [npx](https://www.npmjs.com/package/npx)):
+
+```bash
+npx @ariya/berkala
+```
+
+To run the development version, check out this repo and then:
+
+```bash
+node index.js
+```
+
+[![npm version](https://img.shields.io/npm/v/@ariya/berkala)](https://www.npmjs.com/package/@ariya/berkala)
+[![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/@ariya/berkala.svg)](https://bundlephobia.com/result?p=@ariya/berkala)
+
+</details>
