@@ -20,10 +20,13 @@ jobs:
   release:
     needs: sanity
     runs-on: ubuntu-latest
+    outputs:
+      release_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - uses: actions/checkout@v2
-      - name: Create release
+      - name: Create a release
         uses: actions/create-release@v1
+        id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -45,3 +48,36 @@ jobs:
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  build:
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux-x64, windows-x64, macos-x64]
+    steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - name: Build the binary
+        run: npm run build -- -t node14-${{ matrix.platform }}
+      - name: Check the binary
+        run: file ./dist/*
+      - name: Package the binary
+        run: |
+          mv dist berkala-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}
+          zip -r9 berkala-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.zip berkala-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}/
+      - name: Upload the binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.release_url }}
+          asset_path: berkala-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.zip
+          asset_name: berkala-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.zip
+          asset_content_type: application/zip
