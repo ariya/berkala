@@ -1,6 +1,6 @@
 {
   "name": "@ariya/berkala",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Run scheduled tasks",
   "main": "index.js",
   "bin": {
