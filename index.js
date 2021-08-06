@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 
+const manifest = require('./package.json');
 const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
@@ -168,6 +169,9 @@ function setupTasks(config) {
     const root = false;
     return new Bree({ root, jobs });
 }
+
+console.log('Berkala', manifest.version);
+console.log();
 
 const config = getConfig();
 const tasks = setupTasks(config);
