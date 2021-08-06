@@ -58,7 +58,8 @@ npx @ariya/berkala
 To run the development version, check out this repo and then:
 
 ```bash
-node index.js
+npm install
+npm start
 ```
 
 [![npm version](https://img.shields.io/npm/v/@ariya/berkala)](https://www.npmjs.com/package/@ariya/berkala)
