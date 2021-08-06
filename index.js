@@ -165,12 +165,8 @@ function setupTasks(config) {
     const jobs = Object.keys(tasks).map((name) => {
         return convert(name, tasks[name]);
     });
-    return new Bree({ jobs });
-}
-
-// workaround an exception thrown by Bree
-if (!fs.existsSync('jobs')) {
-    fs.mkdirSync('jobs');
+    const root = false;
+    return new Bree({ root, jobs });
 }
 
 const config = getConfig();
