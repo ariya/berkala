@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const os = require('os');
+const child_process = require('child_process');
 
 const manifest = require('./package.json');
 const readline = require('readline-sync');
@@ -73,29 +75,7 @@ function getConfig() {
     return config;
 }
 
-/**
- * A simple job to print a message via console.
- */
-function printJob() {
-    const { workerData } = require('worker_threads');
-    const { job } = workerData;
-    const { message } = job;
-    console.log(message);
-}
-
-/**
- * A job that sends desktop notification.
- */
-function notifyJob() {
-    const os = require('os');
-    const child_process = require('child_process');
-    const { workerData } = require('worker_threads');
-    const { job } = workerData;
-    const { message } = job;
-    let { title } = job;
-    if (!title) {
-        title = 'Berkala';
-    }
+function platformNotify(title, message) {
     if (os.type() === 'Linux') {
         child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
     } else if (os.type() === 'Darwin') {
@@ -135,6 +115,46 @@ function notifyJob() {
         // FIXME what's this system?
         console.log(title, message);
     }
+}
+
+function workerMessageHandler(workerData) {
+    const workerMsg = workerData.message;
+    const { task } = workerMsg;
+    if (task === 'print') {
+        const { message } = workerMsg;
+        console.log(message);
+    } else if (task === 'notify') {
+        const { title, message } = workerMsg;
+        platformNotify(title, message);
+    }
+}
+
+/**
+ * A simple job to print a message via console.
+ */
+function printJob() {
+    const { workerData, parentPort } = require('worker_threads');
+    const { job } = workerData;
+
+    const { message } = job;
+
+    parentPort.postMessage({ task: 'print', message });
+}
+
+/**
+ * A job that sends desktop notification.
+ */
+function notifyJob() {
+    const { workerData, parentPort } = require('worker_threads');
+    const { job } = workerData;
+
+    const { message } = job;
+    let { title } = job;
+    if (!title) {
+        title = 'Berkala';
+    }
+
+    parentPort.postMessage({ task: 'notify', title, message });
 }
 
 /**
@@ -200,7 +220,7 @@ function setupTasks(config) {
         return convert(name, tasks[name]);
     });
     const root = false;
-    return new Bree({ root, jobs });
+    return new Bree({ root, jobs, workerMessageHandler });
 }
 
 console.log('Berkala', manifest.version);
