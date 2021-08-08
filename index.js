@@ -16,26 +16,26 @@ tasks:
 
   # Without an explicit interval, the task runs immediately
   boot:
-    type: notify
-    message: Berkala starts now
+    steps:
+    - notify: Berkala starts now
 
-  # We need to stay hydrated
-  hourly-ping:
-    type: print
+  stay-hydrated:
     interval: every 1 hour
-    message: Drink some water!
+    steps:
+    - notify: Drink some water! # TODO: how much?
+    - print: Reminder was sent
 
-  lunch-reminder:
-    type: notify
+  lunch:
     interval: at 11:58am
-    title: Important reminder
-    message: It's lunch time very soon
+    steps:
+    - notify: It's lunch time very soon
+      title: Important
 
   weekend-exercise:
-    type: notify
     cron: 0 9 * * 6  # every 9 morning on Saturday
-    title: Stay healthy
-    message: Time for some exercises!
+    steps:
+    - notify: Time for some exercises!
+      title: Stay healthy
 `;
 
 /**
@@ -130,84 +130,55 @@ function workerMessageHandler(workerData) {
 }
 
 /**
- * A simple job to print a message via console.
+ * Run a task, execute the steps sequentially.
  */
-function printJob() {
+
+function runTask() {
     const { workerData, parentPort } = require('worker_threads');
+
     const { job } = workerData;
+    const { steps } = job;
 
-    const { message } = job;
-
-    parentPort.postMessage({ task: 'print', message });
-}
-
-/**
- * A job that sends desktop notification.
- */
-function notifyJob() {
-    const { workerData, parentPort } = require('worker_threads');
-    const { job } = workerData;
-
-    const { message } = job;
-    let { title } = job;
-    if (!title) {
-        title = 'Berkala';
-    }
-
-    parentPort.postMessage({ task: 'notify', title, message });
-}
-
-/**
- * A job that dumps the worker data, useful for debugging.
- */
-function debugJob() {
-    const { workerData } = require('worker_threads');
-    const { job } = workerData;
-
-    console.log('debug job=', JSON.stringify(job));
+    steps.forEach((step) => {
+        if (step.print) {
+            parentPort.postMessage({ task: 'print', message: step.print });
+        } else if (step.notify) {
+            const title = step.title ? step.title : 'Berkala';
+            const message = step.notify.trim();
+            parentPort.postMessage({ task: 'notify', title, message });
+        } else {
+            console.error('Unknown step', step);
+        }
+    });
 }
 
 /**
  * Convert a task definition to a Bree job.
  */
 function convert(name, task) {
-    const { type, interval, cron } = task;
+    const { interval, cron } = task;
+    let { steps } = task;
 
-    let path;
-    let options = {};
-    const { message = null } = task;
-
-    switch (type) {
-        case 'debug':
-            path = debugJob;
-            options = task;
-            break;
-
-        case 'print':
-            path = printJob;
-            options = { message };
-            break;
-
-        case 'notify':
-            path = notifyJob;
-            const { title = null } = task;
-            options = { title, message };
-            break;
-
-        default:
-            break;
+    if (!steps || !Array.isArray(steps) || steps.length === 0) {
+        // Migrate legacy task format
+        steps = [];
+        const { type } = task;
+        if (type === 'print') {
+            const { message } = task;
+            steps.push({ print: message });
+        } else if (type === 'notify') {
+            const { message, title } = task;
+            steps.push({ notify: message, title });
+        }
     }
 
-    if (!path) {
-        throw new Error('Unknown task type: ' + type);
-    }
-
+    const path = runTask;
     return {
         name,
         path,
         interval,
         cron,
-        ...options
+        steps
     };
 }
 
