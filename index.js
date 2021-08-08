@@ -101,8 +101,38 @@ function notifyJob() {
     } else if (os.type() === 'Darwin') {
         const command = `display notification "${message}" with title "${title}"`;
         child_process.spawnSync('osascript', ['-e', command]);
+    } else if (os.type() === 'Windows_NT') {
+        /**
+         * Escape a string for PowerShell.
+         * @param {string} str
+         * @return {string}
+         */
+        function psEscape(str) {
+            let result = '';
+            for (let i = 0; i < str.length; i++) {
+                const ch = str[i];
+                if (ch.charCodeAt(0) === 39) {
+                    // single quote, escape it with another single quote
+                    result += ch;
+                }
+                result += ch;
+            }
+            return result;
+        }
+
+        const script = `
+            [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null;
+            $templateType = [Windows.UI.Notifications.ToastTemplateType]::ToastText02;
+            $template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($templateType);
+            $template.SelectSingleNode(\"//text[@id=1]\").InnerText = '${psEscape(title)}';
+            $template.SelectSingleNode(\"//text[@id=2]\").InnerText = '${psEscape(message)}';
+            $toast = [Windows.UI.Notifications.ToastNotification]::new($template);
+            $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('Berkala');
+            $notifier.Show($toast);`;
+
+        child_process.execSync(script, { shell: 'powershell.exe' });
     } else {
-        // TODO Windows
+        // FIXME what's this system?
         console.log(title, message);
     }
 }

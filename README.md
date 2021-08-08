@@ -42,7 +42,7 @@ The schedule for each task can be specified either with a human-friendly interva
 As of now, only the following types of tasks are available:
 
 * `print`: displays a message to the standard output
-* `notify`: sends a desktop notification (_only_ Linux and macOS for now)
+* `notify`: sends a desktop notification
 
 Just like any regular YAML, everything from the `#` character until the end of the line will be ignored. Use this to insert comments.
 
