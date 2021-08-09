@@ -32,7 +32,8 @@
     "bree": "~6.2.1",
     "js-yaml": "~4.1.0",
     "readline-sync": "~1.4.10",
-    "say": "~0.16.0"
+    "say": "~0.16.0",
+    "which": "~2.0.2"
   },
   "devDependencies": {
     "pkg": "~5.3.1",
