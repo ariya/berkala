@@ -8,6 +8,7 @@ const manifest = require('./package.json');
 const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
+const say = require('say');
 
 const CONFIG_FILENAME = 'berkala.yml';
 
@@ -30,6 +31,7 @@ tasks:
     steps:
     - notify: It's lunch time very soon
       title: Important
+    - say: Get ready for lunch
 
   weekend-exercise:
     cron: 0 9 * * 6  # every 9 morning on Saturday
@@ -117,6 +119,22 @@ function platformNotify(title, message) {
     }
 }
 
+function platformSay(message) {
+    if (os.type() === 'Linux') {
+        // TODO: check for Festival first
+        say.speak(message);
+    } else if (os.type() === 'Windows_NT') {
+        // TODO: check for Powershell first
+        say.speak(message);
+    } else if (os.type() === 'Darwin') {
+        say.speak(message, 'Samantha'); // Siri's voice
+    } else {
+        // unsupported
+        console.error('say: unsupport system', os.type());
+        platformNotify(message);
+    }
+}
+
 function workerMessageHandler(workerData) {
     const workerMsg = workerData.message;
     const { task } = workerMsg;
@@ -126,6 +144,9 @@ function workerMessageHandler(workerData) {
     } else if (task === 'notify') {
         const { title, message } = workerMsg;
         platformNotify(title, message);
+    } else if (task === 'say') {
+        const { message } = workerMsg;
+        platformSay(message);
     }
 }
 
@@ -146,6 +167,8 @@ function runTask() {
             const title = step.title ? step.title : 'Berkala';
             const message = step.notify.trim();
             parentPort.postMessage({ task: 'notify', title, message });
+        } else if (step.say) {
+            parentPort.postMessage({ task: 'say', message: step.say });
         } else {
             console.error('Unknown step', step);
         }
