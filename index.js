@@ -8,6 +8,7 @@ const manifest = require('./package.json');
 const readline = require('readline-sync');
 const yaml = require('js-yaml');
 const Bree = require('bree');
+const which = require('which');
 const say = require('say');
 
 const CONFIG_FILENAME = 'berkala.yml';
@@ -121,8 +122,13 @@ function platformNotify(title, message) {
 
 function platformSay(message) {
     if (os.type() === 'Linux') {
-        // TODO: check for Festival first
-        say.speak(message);
+        const resolved = which.sync('festival', { nothrow: true });
+        if (resolved) {
+            say.speak(message);
+        } else {
+            console.error('say: unable to locate Festival');
+            platformNotify(message);
+        }
     } else if (os.type() === 'Windows_NT') {
         // TODO: check for Powershell first
         say.speak(message);
