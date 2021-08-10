@@ -82,7 +82,7 @@ function platformNotify(title, message) {
     if (os.type() === 'Linux') {
         child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
     } else if (os.type() === 'Darwin') {
-        const command = `display notification "${message}" with title "${title}"`;
+        const command = `display notification "${message}" with title "Berkala" subtitle "${title}"`;
         child_process.spawnSync('osascript', ['-e', command]);
     } else if (os.type() === 'Windows_NT') {
         /**
