@@ -215,7 +215,7 @@ function convert(name, task) {
  * Create a Bree instance according to the configuration.
  */
 function setupTasks(config) {
-    const { tasks } = config;
+    const { tasks = [] } = config;
     const jobs = Object.keys(tasks).map((name) => {
         return convert(name, tasks[name]);
     });
@@ -226,6 +226,6 @@ function setupTasks(config) {
 console.log('Berkala', manifest.version);
 console.log();
 
-const config = getConfig();
+const config = getConfig() || {};
 const tasks = setupTasks(config);
 tasks.start();
