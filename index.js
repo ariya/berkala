@@ -143,14 +143,14 @@ function platformSay(message) {
 
 function workerMessageHandler(workerData) {
     const workerMsg = workerData.message;
-    const { task } = workerMsg;
-    if (task === 'print') {
+    const { duty } = workerMsg;
+    if (duty === 'print') {
         const { message } = workerMsg;
         console.log(message);
-    } else if (task === 'notify') {
+    } else if (duty === 'notify') {
         const { title, message } = workerMsg;
         platformNotify(title, message);
-    } else if (task === 'say') {
+    } else if (duty === 'say') {
         const { message } = workerMsg;
         platformSay(message);
     }
@@ -168,13 +168,13 @@ function runTask() {
 
     steps.forEach((step) => {
         if (step.print) {
-            parentPort.postMessage({ task: 'print', message: step.print });
+            parentPort.postMessage({ duty: 'print', message: step.print });
         } else if (step.notify) {
             const title = step.title ? step.title : 'Berkala';
             const message = step.notify.trim();
-            parentPort.postMessage({ task: 'notify', title, message });
+            parentPort.postMessage({ duty: 'notify', title, message });
         } else if (step.say) {
-            parentPort.postMessage({ task: 'say', message: step.say });
+            parentPort.postMessage({ duty: 'say', message: step.say });
         } else {
             console.error('Unknown step', step);
         }
