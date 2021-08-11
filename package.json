@@ -11,6 +11,7 @@
     "test": "npm run check-format",
     "check-format": "prettier --check \"**/*.js\"",
     "format-code": "prettier --write \"**/*.js\"",
+    "cli-tests": "npx bats tests/cli.bats",
     "build": "pkg --compress brotli ."
   },
   "author": "Ariya Hidayat",
