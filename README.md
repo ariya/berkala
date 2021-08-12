@@ -15,36 +15,63 @@ tasks:
 
   # Without an explicit interval, the task runs immediately
   boot:
-    type: notify
-    message: Berkala starts now
+    steps:
+    - notify: Berkala starts now
 
-  # We need to stay hydrated
-  hourly-ping:
-    type: print
+  stay-hydrated:
     interval: every 1 hour
-    message: Drink some water!
+    steps:
+    - notify: Drink some water! # TODO: how much?
+    - print: Reminder was sent
 
-  lunch-reminder:
-    type: notify
+  lunch:
     interval: at 11:58am
-    title: Important reminder
-    message: It's lunch time very soon
+    steps:
+    - notify: It's lunch time very soon
+      title: Important
+    - say: Get ready for lunch
 
   weekend-exercise:
-    type: notify
     cron: 0 9 * * 6  # every 9 morning on Saturday
-    title: Stay healthy
-    message: Time for some exercises!
+    steps:
+    - notify: Time for some exercises!
+      title: Stay healthy
 ```
-
-The schedule for each task can be specified either with a human-friendly interval (e.g. `every 5 minutes`, `at 5pm`) or a cron expression (refer to [crontab guru](https://crontab.guru/) for more details). If neither is explicitly stated, then the task runs right away.
-
-As of now, only the following types of tasks are available:
-
-* `print`: displays a message to the standard output
-* `notify`: sends a desktop notification
-
 Just like any regular YAML, everything from the `#` character until the end of the line will be ignored. Use this to insert comments.
+
+The schedule for each task can be specified as:
+* [a human-friendly interval](https://breejs.github.io/later/parsers.html#text),  e.g. `every 5 minutes`, `at 5pm`, or
+* [a cron expression](https://crontab.guru/), e.g. `0 9 * * 6`
+
+If neither is explicitly stated, then the task runs right away.
+
+Each task consists of one or more steps.
+
+Every step must be one of the following:
+
+<details><summary><code>print</code>: displays a message to the standard output</summary></details>
+
+<details><summary><code>notify</code>: sends a desktop notification</summary>
+
+The notification is supported on the following system:
+
+* Windows: [Windows.UI.Notifications](https://docs.microsoft.com/en-us/uwp/api/windows.ui.notifications.toastnotification) via [Powershell scripting](https://docs.microsoft.com/en-us/powershell/scripting)
+* macOS: `display notification` with [AppleScript](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html)
+* Linux: [notify-send](https://www.commandlinux.com/man-page/man1/notify-send.1.html), e.g. part of `libnotify-bin` package on Debian/Ubuntu
+
+</details>
+
+<details><summary><code>say</code>: converts text to audible speech</summary>
+
+The text-to-speech conversion is supported on the following system:
+
+* Windows: [System.Speech.Synthesis](https://docs.microsoft.com/en-us/dotnet/api/system.speech.synthesis) via [Powershell scripting](https://docs.microsoft.com/en-us/powershell/scripting)
+* macOS: `say` with [AppleScript](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html)
+* Linux: [Festival speech synthesis](https://www.cstr.ed.ac.uk/projects/festival/), e.g. `festival` and `festvox-kallpc16k` on Debian/Ubuntu
+
+</details>
+
+Found a problem or have a new idea? File [an issue](https://github.com/ariya/berkala/issues)!
 
 <details>
 <summary>Alternative way to run Berkala (with Node.js)</summary>
