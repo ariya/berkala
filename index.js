@@ -143,7 +143,7 @@ function platformSay(message) {
             say.speak(message);
         } else {
             console.error('say: unable to locate Festival');
-            platformNotify(message);
+            platformNotify('Berkala', message);
         }
     } else if (os.type() === 'Windows_NT') {
         // TODO: check for Powershell first
@@ -153,7 +153,7 @@ function platformSay(message) {
     } else {
         // unsupported
         console.error('say: unsupport system', os.type());
-        platformNotify(message);
+        platformNotify('Berkala', message);
     }
 }
 
