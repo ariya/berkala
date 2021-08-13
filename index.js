@@ -80,6 +80,24 @@ function getConfig() {
 }
 
 /**
+ * Escape a string for PowerShell.
+ * @param {string} str
+ * @return {string}
+ */
+function psEscape(str) {
+    let result = '';
+    for (let i = 0; i < str.length; i++) {
+        const ch = str[i];
+        if (ch.charCodeAt(0) === 39) {
+            // single quote, escape it with another single quote
+            result += ch;
+        }
+        result += ch;
+    }
+    return result;
+}
+
+/**
  * Send a desktop notification
  * @param {string} title
  * @param {string} message
@@ -97,24 +115,6 @@ function platformNotify(title, message) {
         const command = `display notification "${message}" with title "Berkala" subtitle "${title}"`;
         child_process.spawnSync('osascript', ['-e', command]);
     } else if (os.type() === 'Windows_NT') {
-        /**
-         * Escape a string for PowerShell.
-         * @param {string} str
-         * @return {string}
-         */
-        function psEscape(str) {
-            let result = '';
-            for (let i = 0; i < str.length; i++) {
-                const ch = str[i];
-                if (ch.charCodeAt(0) === 39) {
-                    // single quote, escape it with another single quote
-                    result += ch;
-                }
-                result += ch;
-            }
-            return result;
-        }
-
         const script = `
             [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null;
             $templateType = [Windows.UI.Notifications.ToastTemplateType]::ToastText02;
@@ -147,7 +147,7 @@ function platformSay(message) {
         }
     } else if (os.type() === 'Windows_NT') {
         // TODO: check for Powershell first
-        say.speak(message);
+        say.speak(psEscape(message));
     } else if (os.type() === 'Darwin') {
         say.speak(message, 'Samantha'); // Siri's voice
     } else {
