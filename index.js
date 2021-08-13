@@ -86,7 +86,13 @@ function getConfig() {
  */
 function platformNotify(title, message) {
     if (os.type() === 'Linux') {
-        child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
+        const resolved = which.sync('notify-send', { nothrow: true });
+        if (resolved) {
+            child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
+        } else {
+            console.error('notify: unable to locate notify-send');
+            console.log(title + ':', message);
+        }
     } else if (os.type() === 'Darwin') {
         const command = `display notification "${message}" with title "Berkala" subtitle "${title}"`;
         child_process.spawnSync('osascript', ['-e', command]);
