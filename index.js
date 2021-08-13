@@ -43,7 +43,7 @@ tasks:
 `;
 
 /**
- * Returns true is interactivity is permitted (i.e. not in a CI)
+ * Returns true if interactivity is permitted (i.e. not in a CI)
  */
 function isInteractive() {
     const stdout = process.stdout;
