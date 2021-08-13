@@ -79,6 +79,11 @@ function getConfig() {
     return config;
 }
 
+/**
+ * Send a desktop notification
+ * @param {string} title
+ * @param {string} message
+ */
 function platformNotify(title, message) {
     if (os.type() === 'Linux') {
         child_process.spawnSync('notify-send', ['-a', 'Berkala', title, message]);
@@ -121,6 +126,10 @@ function platformNotify(title, message) {
     }
 }
 
+/**
+ * Convert text to audible speech
+ * @param {string} message
+ */
 function platformSay(message) {
     if (os.type() === 'Linux') {
         const resolved = which.sync('festival', { nothrow: true });
