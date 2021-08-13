@@ -20,6 +20,7 @@ tasks:
   boot:
     steps:
     - notify: Berkala starts now
+    - say: Ready to rock and roll
 
   stay-hydrated:
     interval: every 1 hour
