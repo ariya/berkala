@@ -49,9 +49,30 @@ Each task consists of one or more steps.
 
 Every step must be one of the following:
 
-<details><summary><code>print</code>: displays a message to the standard output</summary></details>
+<details><summary><code>print</code>: displays a message to the standard output</summary>
+
+Example:
+```yaml
+  morning:
+    interval: at 7:00am
+    steps:
+    - print: Good morning!
+```
+
+</details>
 
 <details><summary><code>notify</code>: sends a desktop notification</summary>
+
+Optionally, `title` can be used to set the notification title.
+
+Example:
+```yaml
+  mahlzeit:
+    interval: at 11:58am
+    steps:
+    - notify: It's lunch time very soon
+      title: Yummy
+```
 
 The notification is supported on the following system:
 
@@ -62,6 +83,14 @@ The notification is supported on the following system:
 </details>
 
 <details><summary><code>say</code>: converts text to audible speech</summary>
+
+Example:
+```yaml
+  vaya-con-dios:
+    interval: 0 17 * * 1-5  # every workday late afternoon
+    steps:
+    - say: Time to go home
+```
 
 The text-to-speech conversion is supported on the following system:
 
