@@ -1,0 +1,10 @@
+tasks:
+  boot:
+    steps:
+    - run: touch must_exist.txt
+
+  another-boot:
+    steps:
+    - run: |
+        touch first_file.txt
+        echo "Hi" > second_file.txt

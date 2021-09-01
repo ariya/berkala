@@ -33,6 +33,14 @@ tasks:
       title: Important
     - say: Get ready for lunch
 
+  sign-of-life:
+    interval: every 30 minutes
+    steps:
+    - print: Pings
+    - run: |
+        ping -c 3 google.com
+        ping -c 5 bing.com
+
   weekend-exercise:
     cron: 0 9 * * 6  # every 9 morning on Saturday
     steps:
@@ -97,6 +105,7 @@ function workerMessageHandler(workerData) {
  */
 
 function runTask() {
+    const child_process = require('child_process');
     const { workerData, parentPort } = require('worker_threads');
 
     const { job } = workerData;
@@ -111,6 +120,18 @@ function runTask() {
             parentPort.postMessage({ duty: 'notify', title, message });
         } else if (step.say) {
             parentPort.postMessage({ duty: 'say', message: step.say });
+        } else if (step.run) {
+            const cmd = step.run;
+            const timeoutMinutes = step['timeout-minutes'] || 3;
+            const timeout = 60 * 1000 * timeoutMinutes;
+            const options = { timeout };
+            try {
+                child_process.execSync(cmd, options);
+            } catch (e) {
+                const { errno, stderr } = e;
+                const error = stderr.toString();
+                console.error(`run error: ${errno} ${error}`);
+            }
         } else {
             console.error('Unknown step', step);
         }

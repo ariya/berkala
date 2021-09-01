@@ -21,3 +21,23 @@ teardown() {
     run ./dist/berkala
     assert_failure 255
 }
+
+@test "must run a command" {
+    rm -rf ./must_exist.txt ./first-file.txt ./second-file.txt
+    cp tests/test-run.yml berkala.yml
+    run ./dist/berkala
+    run cat ./must_exist.txt
+    run cat ./first_file.txt
+    run cat ./second_file.txt
+    assert_success
+}
+
+@test "must support timeout" {
+    rm -rf ./must_exist.txt ./must_not_exist.txt
+    cp tests/test-timeout.yml berkala.yml
+    run ./dist/berkala
+    run cat ./must_exist.txt
+    assert_success
+    run cat ./must_not_exist.txt
+    assert_failure
+}

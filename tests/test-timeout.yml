@@ -1,0 +1,8 @@
+tasks:
+  boot:
+    steps:
+    - run: |
+        touch must_exist.txt
+        sleep 7
+        touch must_not_exist.txt
+      timeout-minutes: 0.01
