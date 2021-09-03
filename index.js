@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const os = require('os');
 
 const manifest = require('./package.json');
 const readline = require('readline-sync');
@@ -66,7 +67,12 @@ function getConfig() {
         console.log(CONFIG_FILENAME, 'does not exist.');
         const answer = readline.question('Do you want to create one (Y/n)? ').toUpperCase();
         if (answer === 'Y' || answer === 'YES') {
-            fs.writeFileSync(CONFIG_FILENAME, SAMPLE_CONFIG.trim(), 'utf-8');
+            let conf = SAMPLE_CONFIG.trim();
+            if (os.type() === 'Windows_NT') {
+                // ping on Window does not support "-c"
+                conf = conf.replace(/ping -c/gi, 'ping -n');
+            }
+            fs.writeFileSync(CONFIG_FILENAME, conf, 'utf-8');
             return yaml.load(SAMPLE_CONFIG);
         } else {
             console.error('Can not continue, configuration does not exist!');
