@@ -127,12 +127,12 @@ function runTask() {
         } else if (step.say) {
             parentPort.postMessage({ duty: 'say', message: step.say });
         } else if (step.run) {
-            const cmd = step.run;
+            const command = step.run;
             const timeoutMinutes = step['timeout-minutes'] || 3;
             const timeout = 60 * 1000 * timeoutMinutes;
             const options = { timeout };
             try {
-                child_process.execSync(cmd, options);
+                child_process.execSync(command, options);
             } catch (e) {
                 const { errno, stderr } = e;
                 const msg = stderr ? stderr.toString() : e.toString();
