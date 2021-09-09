@@ -128,9 +128,10 @@ function runTask() {
             parentPort.postMessage({ duty: 'say', message: step.say });
         } else if (step.run) {
             const command = step.run;
+            const cwd = step['working-directory'] || process.cwd();
             const timeoutMinutes = step['timeout-minutes'] || 3;
             const timeout = 60 * 1000 * timeoutMinutes;
-            const options = { timeout };
+            const options = { cwd, timeout };
             try {
                 child_process.execSync(command, options);
             } catch (e) {
