@@ -41,6 +41,7 @@ tasks:
     - run: |
         ping -c 3 google.com
         ping -c 5 bing.com
+      timeout-minutes: 2
 
   weekend-exercise:
     cron: 0 9 * * 6  # every 9 morning on Saturday
