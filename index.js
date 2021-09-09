@@ -135,8 +135,8 @@ function runTask() {
                 child_process.execSync(cmd, options);
             } catch (e) {
                 const { errno, stderr } = e;
-                const error = stderr.toString();
-                console.error(`run error: ${errno} ${error}`);
+                const msg = stderr ? stderr.toString() : e.toString();
+                console.error(`run error: ${errno} ${msg}`);
             }
         } else {
             console.error('Unknown step', step);
