@@ -31,6 +31,12 @@ tasks:
       title: Important
     - say: Get ready for lunch
 
+  sign-of-life:
+    interval: every 2 hours
+    steps:
+    - run: ping -c 7 google.com
+      timeout-minutes: 2
+
   weekend-exercise:
     cron: 0 9 * * 6  # every 9 morning on Saturday
     steps:
@@ -48,6 +54,32 @@ If neither is explicitly stated, then the task runs right away.
 Each task consists of one or more steps.
 
 Every step must be one of the following:
+
+<details><summary><code>run</code>: executes a shell command</summary>
+
+Example:
+```yaml
+  sign-of-life:
+    interval: every 30 minutes
+    steps:
+    - run: ping -c 7 google.com
+```
+Optionally, `timeout-minutes` can be used to limit the execution time and `working-directory` can be used to set the directory to start the execution from.
+
+Another example:
+```yaml
+  sys-resource:
+    interval: every 2 hours
+    steps:
+    - run: |
+        date >> resources.log
+        top | head -n 4 >> resources.log
+      timeout-minutes: 3
+      working-directory: /var/log
+```
+
+</details>
+
 
 <details><summary><code>print</code>: displays a message to the standard output</summary>
 
