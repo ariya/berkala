@@ -12,7 +12,7 @@ teardown() {
     touch berkala.yml
     run ./dist/berkala
     assert_success
-    assert_output --partial 'Berkala 1.2'
+    assert_output --partial 'Berkala 1.3'
 }
 
 @test "will not create a config file automatically in non-interactive tty" {
