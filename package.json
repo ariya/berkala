@@ -52,5 +52,8 @@
     "quoteProps": "consistent",
     "singleQuote": true,
     "trailingComma": "none"
+  },
+  "volta": {
+    "node": "14.18.2"
   }
 }
